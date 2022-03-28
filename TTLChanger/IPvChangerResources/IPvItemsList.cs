@@ -4,7 +4,7 @@ namespace PcTTLChanger.IPvChangerResources.interfaces
 {
     public class IPvItemsList : IIPvItemsList
     {
-        private List<IIPvItem> _IPvItems;
+        private static List<IIPvItem> _IPvItems;
         public IPvItemsList()
         {
             _IPvItems = new List<IIPvItem>()

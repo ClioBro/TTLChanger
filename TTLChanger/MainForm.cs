@@ -13,8 +13,8 @@ namespace ClioOFF
         private readonly IIPvItemsList _ipvItemList = new IPvItemsList();
         private readonly Controller _controller;
 
-        public short TTL => Convert.ToInt16(Chk_ttl.Text);
         public IIPvItem IPvItem => Chk_IPv.SelectedItem as IIPvItem;
+        public short TTL => Convert.ToInt16(Chk_ttl.Text);
         public ulong Hours => Convert.ToUInt32(Chk_h);
         public ulong Minutes => Convert.ToUInt32(Chk_m);
         public ulong Seconds => Convert.ToUInt32(Chk_s);
@@ -28,11 +28,20 @@ namespace ClioOFF
             Chk_IPv.DisplayMember = nameof(IPvItem.Name);
         }
         public void ShowCurrentTTLStats(string stats) => ShowMessage(stats);
+        private void ShowMessage(string message, string caption = "Message:") => MessageBox.Show(message, caption);
+
+        private void SetTTL128(object sender, EventArgs e) => Chk_ttl.Text = "128";
+        private void SetTTL65(object sender, EventArgs e) => Chk_ttl.Text = "65";
 
         private void ShutdownPC(object sender, EventArgs e) => StartTimerShutdownOperation(new PcShutdown());
         private void RebootPC(object sender, EventArgs e) => StartTimerShutdownOperation(new PcReboot());
-        private void SetTTL128(object sender, EventArgs e) => Chk_ttl.Text = "128";
-        private void SetTTL65(object sender, EventArgs e) => Chk_ttl.Text = "65";
+        private void StartTimerShutdownOperation(BasePcOFFTimer pcShutdown)
+        {
+            ulong seconds = new CalculateTime(Hours, Minutes, Seconds).CalculateInSeconds();
+            pcShutdown.SetTimer(seconds);
+            pcShutdown.StartProcess();
+        }
+        
         private void ApplyValueTTL(object sender, EventArgs e)
         {
             try
@@ -61,15 +70,10 @@ namespace ClioOFF
                     $"Если есть возможность, сообщите об ошибке разработчику.", "Error !");
             }
         }
-        private void StartTimerShutdownOperation(BasePcOFFTimer pcShutdown)
-        {
-            ulong seconds =  new CalculateTime(Hours, Minutes, Seconds).CalculateInSeconds();
-            pcShutdown.SetTimer(seconds);
-            pcShutdown.StartProcess();
-        }
+        
         private void ShowCurrentTTLStats(object sender, EventArgs e) => _controller.ShowTTLStats();
-        private void ShowMessage(string message, string caption = "Message:") => MessageBox.Show(message, caption);
-        private void LinkLabelClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        
+        private void GoToGitHub(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/ClioBro");
         }

@@ -24,7 +24,7 @@ namespace PcTTLChanger.IPvChangerResources
             }
             _currentKey?.SetValue(DefaultTTL, Convert.ToInt32(ttlValue));
         }
-        public void Close() => _currentKey.Close();
+        public void Close() => _currentKey?.Close();
         public void Open()
         {
             RegistryKey machine = Registry.LocalMachine;
